@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ice Kingdom — chnexio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100%;
+      background: #020c1a;
+      overflow-x: hidden;
+    }
+
+    /* page centering wrapper */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── BACKGROUND ── */
+    .ik-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: url('https://i.imgur.com/SPNMYWd.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      z-index: -2;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    /* ── AURORA ── */
+    .ik-aurora {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 40% at 20% 0%, rgba(80,160,255,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 30% at 80% 10%, rgba(120,80,255,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 50% at 50% 100%, rgba(40,120,200,0.05) 0%, transparent 70%);
+      animation: ik-aurora 10s ease-in-out infinite alternate;
+    }
+    @keyframes ik-aurora {
+      0%   { opacity:0.5; transform:scaleX(1) scaleY(1); }
+      33%  { opacity:1;   transform:scaleX(1.06) scaleY(1.02); }
+      66%  { opacity:0.7; transform:scaleX(0.95) scaleY(1.04); }
+      100% { opacity:0.8; transform:scaleX(1.03) scaleY(0.98); }
+    }
+
+    /* ── SNOW ── */
+    #ikSnow {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    /* ── CURSOR TRAIL ── */
+    #ikTrail {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    /* ── FLOATING RUNES ── */
+    .ik-runes { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .ik-rune {
+      position: absolute;
+      font: 900 1.1rem 'Cinzel', serif;
+      color: rgba(160,220,255,0.08);
+      animation: ik-rune-float 6s ease-in-out infinite alternate;
+      text-shadow: 0 0 20px rgba(160,220,255,0.15);
+    }
+    @keyframes ik-rune-float {
+      0%   { transform: translateY(0px) rotate(0deg);   opacity:0.05; }
+      50%  { transform: translateY(-12px) rotate(5deg); opacity:0.12; }
+      100% { transform: translateY(4px) rotate(-3deg);  opacity:0.06; }
+    }
+
+    /* ── CARD ── */
+    .pp-uc-background {
+      background: #020c1a;
+      background-image:
+        linear-gradient(rgba(160,220,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(160,220,255,0.04) 1px, transparent 1px),
+        radial-gradient(ellipse at 70% 0%, rgba(100,180,255,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 30% 100%, rgba(80,160,255,0.05) 0%, transparent 50%);
+      background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+      border: 1px solid rgba(160,220,255,0.25);
+      border-radius: 24px;
+      max-width: 1200px;
+      width: 100%;
+      overflow: visible;
+      transition: 600ms cubic-bezier(0.23, 1, 0.32, 1);
+      padding-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+      animation: ik-card-breathe 7s ease-in-out infinite;
+    }
+    @keyframes ik-card-breathe {
+      0%,100% { box-shadow: 0 0 0 1px rgba(160,220,255,0.08), 0 20px 60px rgba(0,10,30,0.8), 0 0 80px rgba(100,180,255,0.06); }
+      50%      { box-shadow: 0 0 0 1px rgba(160,220,255,0.14), 0 20px 60px rgba(0,10,30,0.8), 0 0 140px rgba(100,180,255,0.12); }
+    }
+    .pp-uc-background::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 25px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(160,220,255,0.15) 30%,
+        rgba(200,240,255,0.3) 50%,
+        rgba(160,220,255,0.15) 70%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: ik-border-sweep 4s linear infinite;
+      z-index: -1;
+      pointer-events: none;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      padding: 1px;
+    }
+    @keyframes ik-border-sweep { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+    /* ── INNER GRID ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr 280px;
+      grid-template-rows: 1fr auto;
+      width: 100%;
+      height: 680px;
+    }
+
+    /* ── AVATAR ── */
+    .pp-uc-avatar-container {
+      grid-column: 3 / 4; grid-row: 1 / 3;
+      align-self: stretch; padding: 0;
+      border-radius: 0 22px 22px 0;
+      overflow: hidden; background: #020c1a;
+      z-index: 1;
+      mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    }
+    .pp-uc-avatar {
+      width: 100%; height: 100%;
+      object-position: top center; object-fit: cover;
+      display: block; border-radius: 0;
+      mask-image: linear-gradient(to left, black 70%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, black 70%, transparent 100%);
+      filter: brightness(0.85) saturate(0.75) hue-rotate(5deg);
+      transition: filter 1.2s ease;
+    }
+    .pp-uc-avatar:hover { filter: brightness(1.05) saturate(1.1) hue-rotate(0deg); }
+
+    /* ── HEADER INFO STRIP ── */
+    .card-header-info {
+      grid-column: 2 / 3; grid-row: 1 / 2;
+      display: flex; flex-direction: column;
+      justify-content: flex-start; gap: 8px;
+      padding: 1.2rem 1rem;
+      z-index: 3;
+    }
+    .profile-info-box {
+      background: rgba(2,12,26,0.92);
+      border: 1px solid rgba(160,220,255,0.3);
+      backdrop-filter: blur(14px);
+      color: #c8e8ff;
+      padding: 6px 18px; border-radius: 4px;
+      animation: ik-glow-pulse 4s ease-in-out infinite;
+      display: inline-flex; align-items: center; gap: 6px;
+      font: 400 0.75rem 'Raleway', sans-serif; letter-spacing: 2px;
+      width: fit-content;
+    }
+    @keyframes ik-glow-pulse {
+      0%,100% { box-shadow: 0 0 20px rgba(100,180,255,0.15), inset 0 0 10px rgba(100,180,255,0.05); }
+      50%      { box-shadow: 0 0 40px rgba(100,180,255,0.35), inset 0 0 20px rgba(100,180,255,0.12); }
+    }
+    .profile-title {
+      font: 700 1rem 'Cinzel', serif; letter-spacing: 3px;
+      color: #e0f4ff; text-transform: uppercase;
+    }
+    .profile-followers {
+      background: rgba(2,12,26,0.9); border: 1px solid rgba(160,220,255,0.25);
+      backdrop-filter: blur(12px); color: #a0d4f0;
+      font: 400 0.8rem 'Raleway', sans-serif;
+      padding: 6px 18px; border-radius: 4px; letter-spacing: 1px;
+      width: fit-content;
+    }
+
+    /* ── FOLLOW BUTTONS ROW ── */
+    .card-actions {
+      grid-column: 2 / 3; grid-row: 2 / 3;
+      display: flex; gap: 0.5rem; padding: 0.5rem 1rem;
+      align-items: center; border-top: 1px solid rgba(160,220,255,0.08);
+    }
+    .ik-action-btn {
+      flex: 1; border-radius: 4px; border: 1px solid rgba(160,220,255,0.3);
+      background: rgba(2,12,26,0.8); color: #a0d4f0;
+      font: 600 0.7rem 'Cinzel', serif; text-transform: uppercase; letter-spacing: 2px;
+      padding: 10px; cursor: pointer;
+      transition: 400ms cubic-bezier(0.23,1,0.32,1);
+    }
+    .ik-action-btn:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(100,180,255,0.2); border-color: rgba(160,220,255,0.6); }
+
+    /* ══════════════════════════
+       SIDE NAV
+    ══════════════════════════ */
+    .ik-nav {
+      grid-column: 1 / 2; grid-row: 1 / 3;
+      display: flex; flex-direction: column;
+      padding: 2rem 1rem; gap: 8px;
+      border-right: 1px solid rgba(160,220,255,0.08);
+      z-index: 10; position: relative;
+    }
+    .ik-nav::after {
+      content: '';
+      position: absolute; right: 0; top: 20%; bottom: 20%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(160,220,255,0.2) 30%, rgba(200,240,255,0.4) 50%, rgba(160,220,255,0.2) 70%, transparent);
+      animation: ik-nav-line 5s ease-in-out infinite alternate;
+    }
+    @keyframes ik-nav-line {
+      0%   { opacity:0.4; transform:scaleY(0.8); }
+      100% { opacity:1;   transform:scaleY(1); }
+    }
+
+    .ik-nav-title {
+      font: 900 0.6rem 'Cinzel', serif; letter-spacing: 4px;
+      color: rgba(160,220,255,0.3); text-transform: uppercase;
+      padding: 0 0.5rem; margin-bottom: 8px; position: relative;
+    }
+    .ik-nav-title::after {
+      content: '❄'; position: absolute; right: 4px; top: 0;
+      font-size: 0.5rem; opacity: 0.4; animation: ik-spin 8s linear infinite;
+    }
+    @keyframes ik-spin { to { transform: rotate(360deg); } }
+
+    .ik-tab {
+      font: 600 0.65rem 'Cinzel', serif; cursor: pointer;
+      color: rgba(160,220,255,0.5); background: transparent;
+      border: 1px solid transparent; border-radius: 6px;
+      transition: all 300ms ease; padding: 10px 14px;
+      display: flex; align-items: center; gap: 10px;
+      outline: none; letter-spacing: 2px; text-transform: uppercase;
+      position: relative; overflow: hidden;
+      -webkit-user-select: none; user-select: none;
+    }
+    .ik-tab::before {
+      content: ''; position: absolute; left: 0; top: 0;
+      width: 2px; height: 100%; background: rgba(160,220,255,0);
+      transition: all 300ms ease; border-radius: 0 2px 2px 0;
+    }
+    .ik-tab::after {
+      content: ''; position: absolute; top: 50%; left: 14px;
+      width: 0; height: 0; background: rgba(160,220,255,0.06);
+      border-radius: 50%; transform: translate(-50%,-50%);
+      transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease; opacity: 0;
+    }
+    .ik-tab:hover::after { width: 200px; height: 200px; opacity: 1; }
+    .ik-tab:hover { color: rgba(160,220,255,0.85); background: rgba(160,220,255,0.04); border-color: rgba(160,220,255,0.12); }
+    .ik-tab:hover::before { background: rgba(160,220,255,0.35); }
+    .ik-tab.active { color: #e0f4ff; background: rgba(160,220,255,0.08); border-color: rgba(160,220,255,0.22); box-shadow: 0 0 18px rgba(100,180,255,0.12); }
+    .ik-tab.active::before { background: #a0d4f0; box-shadow: 0 0 6px rgba(160,220,255,0.5); }
+    .ik-tab-icon { font-size: 0.9rem; opacity: 0.7; transition: transform 0.3s ease; }
+    .ik-tab:hover .ik-tab-icon { transform: scale(1.2); }
+
+    .ik-divider { height: 1px; background: rgba(160,220,255,0.07); margin: 4px 0; }
+
+    .ik-nav-stats { margin-top: auto; display: flex; flex-direction: column; gap: 5px; padding-top: 10px; border-top: 1px solid rgba(160,220,255,0.08); }
+    .ik-stat { display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; border-radius: 6px; background: rgba(160,220,255,0.03); border: 1px solid rgba(160,220,255,0.07); }
+    .ik-stat-label { font: 600 0.52rem 'Cinzel', serif; letter-spacing: 2px; color: rgba(160,220,255,0.3); text-transform: uppercase; }
+    .ik-stat-val { font: 700 0.6rem 'Cinzel', serif; color: rgba(160,220,255,0.6); }
+    .ik-stat-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(100,220,140,0.7); box-shadow: 0 0 6px rgba(100,220,140,0.5); animation: ik-blink 2s ease-in-out infinite; }
+    @keyframes ik-blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+    /* ══════════════════════════
+       CONTENT
+    ══════════════════════════ */
+    .ik-content { grid-column: 2 / 3; grid-row: 1 / 2; position: relative; overflow: hidden; }
+    .ik-panel {
+      position: absolute; inset: 0; padding: 1.6rem 1.4rem;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 400ms ease;
+      display: flex; flex-direction: column; box-sizing: border-box;
+    }
+    .ik-panel.active { opacity: 1; visibility: visible; pointer-events: all; }
+
+    .ik-scroll { overflow-y: auto; flex: 1; padding-bottom: 3rem; mask-image: linear-gradient(to bottom, black 75%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%); outline: none; }
+    .ik-scroll::-webkit-scrollbar { display: none; }
+
+    /* ── TICKER ── */
+    .ik-ticker {
+      overflow: hidden; border-top: 1px solid rgba(160,220,255,0.07);
+      border-bottom: 1px solid rgba(160,220,255,0.07); padding: 5px 0; margin-bottom: 12px;
+      mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    }
+    .ik-ticker-inner {
+      display: flex; gap: 40px; white-space: nowrap;
+      animation: ik-ticker 22s linear infinite;
+      font: 600 0.55rem 'Cinzel', serif; letter-spacing: 3px;
+      color: rgba(160,220,255,0.28); text-transform: uppercase;
+    }
+    @keyframes ik-ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+    /* ── PANEL HEADER ── */
+    .ik-panel-header { margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid rgba(160,220,255,0.1); position: relative; }
+    .ik-panel-header::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 40px; height: 1px; background: rgba(160,220,255,0.6); box-shadow: 0 0 10px rgba(160,220,255,0.5); animation: ik-header-line 3s ease-in-out infinite alternate; }
+    @keyframes ik-header-line { 0%{width:30px;opacity:0.5;} 100%{width:60px;opacity:1;} }
+    .ik-panel-title {
+      font: 900 1.3rem/1 'Cinzel', serif; color: #e0f4ff;
+      letter-spacing: 4px; text-transform: uppercase;
+      text-shadow: 0 0 30px rgba(160,220,255,0.4); margin: 0 0 4px;
+      position: relative; display: inline-block;
+    }
+    .ik-panel-title::before, .ik-panel-title::after {
+      content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    }
+    .ik-panel-title::before { color: #a0d4f0; animation: ik-glitch1 6s infinite; clip-path: polygon(0 20%,100% 20%,100% 40%,0 40%); transform: translateX(-2px); }
+    .ik-panel-title::after  { color: #80b8e0; animation: ik-glitch2 6s infinite; clip-path: polygon(0 60%,100% 60%,100% 80%,0 80%); transform: translateX(2px); }
+    @keyframes ik-glitch1 { 0%,94%,100%{transform:translateX(0);opacity:0;} 95%{transform:translateX(-3px);opacity:0.6;} 96%{transform:translateX(2px);opacity:0.4;} 97%{transform:translateX(0);opacity:0;} }
+    @keyframes ik-glitch2 { 0%,94%,100%{transform:translateX(0);opacity:0;} 95%{transform:translateX(3px);opacity:0.5;} 96%{transform:translateX(-1px);opacity:0.3;} 97%{transform:translateX(0);opacity:0;} }
+
+    .ik-panel-sub { font: 300 0.65rem 'Raleway', sans-serif; color: rgba(160,220,255,0.4); letter-spacing: 2px; }
+
+    /* ── TEXT ── */
+    .ik-text {
+      font: 400 0.78rem/1.8 'Raleway', sans-serif; color: rgba(160,220,255,0.7);
+      background: rgba(160,220,255,0.03); border: 1px solid rgba(160,220,255,0.1);
+      border-radius: 8px; padding: 12px 15px; margin-bottom: 8px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .ik-text:hover { border-color: rgba(160,220,255,0.18); box-shadow: 0 0 12px rgba(100,180,255,0.05); }
+    .ik-text-warn { color: rgba(255,120,120,0.7); background: rgba(255,80,80,0.03); border-color: rgba(255,100,100,0.15); }
+
+    /* ── QUOTE ── */
+    .ik-quote {
+      border-left: 2px solid rgba(160,220,255,0.3); padding: 10px 14px; margin-bottom: 8px;
+      font: italic 300 0.8rem/1.7 'Raleway', sans-serif; color: rgba(160,220,255,0.5);
+      background: rgba(160,220,255,0.02); border-radius: 0 6px 6px 0; position: relative;
+      transition: border-color 0.4s ease;
+    }
+    .ik-quote:hover { border-left-color: rgba(160,220,255,0.6); }
+    .ik-quote::before { content: '"'; position: absolute; top: -4px; left: 8px; font: 900 2rem 'Cinzel', serif; color: rgba(160,220,255,0.12); line-height: 1; }
+
+    /* ── CRYSTAL DIVIDER ── */
+    .ik-crystal-div {
+      text-align: center; font: 900 0.7rem 'Cinzel', serif;
+      color: rgba(160,220,255,0.2); letter-spacing: 6px; margin: 10px 0; position: relative;
+    }
+    .ik-crystal-div::before, .ik-crystal-div::after {
+      content: ''; position: absolute; top: 50%; width: 30%; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(160,220,255,0.15));
+    }
+    .ik-crystal-div::before { left: 0; }
+    .ik-crystal-div::after  { right: 0; background: linear-gradient(to left, transparent, rgba(160,220,255,0.15)); }
+
+    /* ── BUTTONS ── */
+    .ik-btn {
+      display: block; text-align: center; padding: 11px 16px;
+      border: 1px solid rgba(160,220,255,0.25); border-radius: 6px;
+      color: rgba(160,220,255,0.8) !important; text-decoration: none;
+      font: 600 0.62rem 'Cinzel', serif; letter-spacing: 3px; text-transform: uppercase;
+      background: rgba(160,220,255,0.03); margin-bottom: 8px;
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .ik-btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(160,220,255,0.08), transparent);
+      transform: translateX(-100%); transition: transform 0.5s ease;
+    }
+    .ik-btn:hover::after { transform: translateX(100%); }
+    .ik-btn:hover { border-color: rgba(160,220,255,0.55); color: #e0f4ff !important; box-shadow: 0 0 25px rgba(100,180,255,0.18); background: rgba(160,220,255,0.07); transform: translateY(-1px); }
+
+    /* ── GOALS ── */
+    .ik-goal {
+      display: flex; align-items: center; gap: 14px; padding: 11px 14px;
+      border-radius: 8px; margin-bottom: 7px; font: 400 0.76rem 'Raleway', sans-serif;
+      border: 1px solid rgba(160,220,255,0.1); transition: all 0.3s ease;
+    }
+    .ik-goal:hover { border-color: rgba(160,220,255,0.22); transform: translateX(2px); }
+    .ik-goal-done { background: rgba(160,220,255,0.04); color: rgba(160,220,255,0.7); }
+    .ik-goal-done .ik-goal-icon { color: #a0d4f0; text-shadow: 0 0 10px rgba(160,220,255,0.7); animation: ik-icon-pulse 3s ease-in-out infinite; }
+    @keyframes ik-icon-pulse { 0%,100%{text-shadow:0 0 10px rgba(160,220,255,0.7);} 50%{text-shadow:0 0 20px rgba(160,220,255,1), 0 0 30px rgba(160,220,255,0.5);} }
+    .ik-goal-locked { background: rgba(160,220,255,0.02); color: rgba(160,220,255,0.35); }
+    .ik-goal-icon { font-size: 1rem; flex-shrink: 0; }
+    .ik-goal-text { display: flex; flex-direction: column; gap: 2px; }
+    .ik-goal-label { font-weight: 600; letter-spacing: 1px; }
+    .ik-goal-reward { font-size: 0.66rem; opacity: 0.7; font-style: italic; }
+
+    /* ── PROGRESS ── */
+    .ik-progress-wrap { background: rgba(160,220,255,0.03); border: 1px solid rgba(160,220,255,0.1); border-radius: 8px; padding: 11px 14px; margin-bottom: 7px; }
+    .ik-progress-label { font: 600 0.62rem 'Cinzel', serif; color: rgba(160,220,255,0.4); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 7px; display: flex; justify-content: space-between; }
+    .ik-progress-bar { height: 4px; background: rgba(160,220,255,0.08); border-radius: 2px; overflow: hidden; }
+    .ik-progress-fill {
+      height: 100%; background: linear-gradient(90deg, rgba(80,140,255,0.6), rgba(160,220,255,0.9));
+      border-radius: 2px; position: relative; overflow: hidden;
+    }
+    .ik-progress-fill::after {
+      content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: ik-shimmer 2s ease-in-out infinite;
+    }
+    @keyframes ik-shimmer { to{left:200%;} }
+
+    /* ── CREATORS ── */
+    .ik-creator {
+      display: flex; align-items: center; gap: 13px; padding: 10px 13px;
+      border-radius: 8px; margin-bottom: 7px; text-decoration: none;
+      border: 1px solid rgba(160,220,255,0.1); background: rgba(160,220,255,0.02);
+      transition: all 0.35s ease; position: relative; overflow: hidden;
+    }
+    .ik-creator::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: rgba(160,220,255,0); transition: all 0.3s ease; }
+    .ik-creator:hover { border-color: rgba(160,220,255,0.28); background: rgba(160,220,255,0.05); transform: translateX(5px); box-shadow: 0 0 20px rgba(100,180,255,0.06); }
+    .ik-creator:hover::before { background: rgba(160,220,255,0.55); box-shadow: 0 0 8px rgba(160,220,255,0.4); }
+    .ik-creator img { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(160,220,255,0.3); object-fit: cover; filter: brightness(0.9) saturate(0.85); flex-shrink: 0; box-shadow: 0 0 12px rgba(100,180,255,0.2); transition: all 0.4s ease; }
+    .ik-creator:hover img { filter: brightness(1.05) saturate(1.05); box-shadow: 0 0 20px rgba(100,180,255,0.35); }
+    .ik-creator-info { display: flex; flex-direction: column; gap: 2px; }
+    .ik-creator-name { font: 700 0.72rem 'Cinzel', serif; color: #c8e8ff; letter-spacing: 1px; }
+    .ik-creator-note { font: 300 italic 0.62rem 'Raleway', sans-serif; color: rgba(160,220,255,0.4); }
+    .ik-creator-tag { font: 600 0.5rem 'Cinzel', serif; letter-spacing: 1.5px; text-transform: uppercase; padding: 1px 6px; border-radius: 20px; margin-top: 2px; display: inline-block; width: fit-content; }
+    .ik-tag-royal  { color: rgba(255,200,80,0.9);  background: rgba(255,200,80,0.07);  border: 1px solid rgba(255,200,80,0.25); }
+    .ik-tag-knight { color: rgba(160,220,255,0.75); background: rgba(160,220,255,0.06); border: 1px solid rgba(160,220,255,0.18); }
+
+    /* ── LORE ── */
+    .ik-lore-line { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(160,220,255,0.06); font: 400 0.75rem/1.6 'Raleway', sans-serif; color: rgba(160,220,255,0.65); transition: color 0.3s ease; }
+    .ik-lore-line:hover { color: rgba(160,220,255,0.85); }
+    .ik-lore-key { font: 600 0.58rem 'Cinzel', serif; letter-spacing: 2px; color: rgba(160,220,255,0.35); text-transform: uppercase; min-width: 70px; padding-top: 2px; flex-shrink: 0; }
+
+    /* ── UPDATE CARDS ── */
+    .ik-update { padding: 11px 13px; border-radius: 8px; margin-bottom: 7px; border: 1px solid rgba(160,220,255,0.1); background: rgba(160,220,255,0.02); transition: all 0.3s ease; }
+    .ik-update:hover { border-color: rgba(160,220,255,0.22); transform: translateX(2px); }
+    .ik-update-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+    .ik-update-tag { font: 700 0.52rem 'Cinzel', serif; letter-spacing: 2px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
+    .ik-tag-new  { color: rgba(120,220,160,0.8); border-color: rgba(120,220,160,0.2); background: rgba(120,220,160,0.05); }
+    .ik-tag-wip  { color: rgba(220,180,80,0.8);  border-color: rgba(220,180,80,0.2);  background: rgba(220,180,80,0.05); }
+    .ik-tag-done { color: rgba(160,220,255,0.6); border-color: rgba(160,220,255,0.15); background: rgba(160,220,255,0.03); }
+    .ik-update-date { font: 300 0.58rem 'Raleway', sans-serif; color: rgba(160,220,255,0.25); }
+    .ik-update-text { font: 400 0.73rem/1.6 'Raleway', sans-serif; color: rgba(160,220,255,0.6); }
+
+    /* ── FAQ ── */
+    .ik-faq { padding: 11px 14px; border-radius: 8px; margin-bottom: 7px; border: 1px solid rgba(160,220,255,0.08); background: rgba(160,220,255,0.02); transition: border-color 0.3s ease; }
+    .ik-faq:hover { border-color: rgba(160,220,255,0.16); }
+    .ik-faq-q { font: 600 0.7rem 'Cinzel', serif; color: rgba(160,220,255,0.7); letter-spacing: 1px; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+    .ik-faq-q::before { content: 'Q'; font-size: 0.55rem; padding: 1px 5px; border-radius: 3px; background: rgba(160,220,255,0.08); border: 1px solid rgba(160,220,255,0.15); color: rgba(160,220,255,0.5); flex-shrink: 0; }
+    .ik-faq-a { font: 400 0.72rem/1.6 'Raleway', sans-serif; color: rgba(160,220,255,0.5); padding-left: 22px; }
+
+    /* ── CREDITS ── */
+    .credits { margin-top: 0.5rem; padding: 4px 1rem; color: rgba(160,220,255,0.2); font: 300 0.6rem 'Raleway', sans-serif; }
+    .credits a { color: rgba(160,220,255,0.2); text-decoration: none; transition: color 0.3s ease; }
+    .credits a:hover { color: rgba(160,220,255,0.5); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 799px) {
+      body { padding: 0; }
+      .card-grid { grid-template-columns: 1fr; grid-template-rows: auto auto auto auto; height: unset; }
+      .pp-uc-avatar-container { grid-column: 1/2; grid-row: 1/2; height: 400px; border-radius: 22px 22px 0 0; }
+      .pp-uc-avatar { mask-image: linear-gradient(to bottom, black 70%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%); }
+      .card-header-info { grid-column: 1/2; grid-row: 1/2; align-self: end; }
+      .ik-nav { grid-column: 1/2; grid-row: 2/3; flex-direction: row; padding: 0.5rem; border-right: none; border-bottom: 1px solid rgba(160,220,255,0.08); overflow-x: auto; }
+      .ik-nav-title, .ik-divider, .ik-nav-stats, .ik-nav::after { display: none; }
+      .ik-tab { padding: 8px 10px; flex-shrink: 0; }
+      .ik-tab-icon { display: none; }
+      .ik-content { grid-column: 1/2; grid-row: 3/4; min-height: 350px; }
+      .ik-panel { position: relative; min-height: 350px; }
+      .card-actions { grid-column: 1/2; grid-row: 4/5; }
+      #ikSnow, #ikTrail, .ik-runes { display: none; }
+      .pp-uc-background::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ik-bg"></div>
+  <canvas id="ikSnow"></canvas>
+  <canvas id="ikTrail"></canvas>
+  <div class="ik-aurora"></div>
+
+  <div class="ik-runes">
+    <span class="ik-rune" style="top:12%;left:6%;animation-delay:0s;">ᚠ</span>
+    <span class="ik-rune" style="top:35%;left:3%;animation-delay:1.2s;">ᚢ</span>
+    <span class="ik-rune" style="top:58%;left:7%;animation-delay:2.4s;">ᚦ</span>
+    <span class="ik-rune" style="top:78%;left:4%;animation-delay:0.7s;">ᚨ</span>
+    <span class="ik-rune" style="top:20%;right:5%;animation-delay:1.8s;">ᚱ</span>
+    <span class="ik-rune" style="top:45%;right:3%;animation-delay:0.4s;">ᚲ</span>
+    <span class="ik-rune" style="top:70%;right:6%;animation-delay:2.1s;">ᚷ</span>
+  </div>
+
+  <div class="pp-uc-background">
+    <div class="card-grid">
+
+      <!-- NAV -->
+      <nav class="ik-nav">
+        <p class="ik-nav-title">Navigate</p>
+        <div class="ik-divider"></div>
+        <div class="ik-tab active" data-panel="ik-p1"><span class="ik-tab-icon">❄</span> The Kingdom</div>
+        <div class="ik-divider"></div>
+        <div class="ik-tab" data-panel="ik-p2"><span class="ik-tab-icon">♔</span> The Throne</div>
+        <div class="ik-divider"></div>
+        <div class="ik-tab" data-panel="ik-p3"><span class="ik-tab-icon">✦</span> The Court</div>
+        <div class="ik-divider"></div>
+        <div class="ik-tab" data-panel="ik-p4"><span class="ik-tab-icon">◈</span> The Lore</div>
+        <div class="ik-divider"></div>
+        <div class="ik-tab" data-panel="ik-p5"><span class="ik-tab-icon">✉</span> TBA</div>
+        <div class="ik-divider"></div>
+        <div class="ik-tab" data-panel="ik-p6"><span class="ik-tab-icon">?</span> FAQ</div>
+
+        <div class="ik-nav-stats">
+          <div class="ik-stat">
+            <span class="ik-stat-label">Status</span>
+            <span style="display:flex;align-items:center;gap:5px;">
+              <span class="ik-stat-dot"></span>
+              <span class="ik-stat-val">Open</span>
+            </span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- CONTENT -->
+      <div class="ik-content">
+
+        <!-- P1: The Kingdom -->
+        <div class="ik-panel active" id="ik-p1">
+          <div class="ik-panel-header">
+            <p class="ik-panel-title" data-text="The Kingdom">The Kingdom</p>
+            <p class="ik-panel-sub">welcome, traveller</p>
+          </div>
+          <div class="ik-scroll" tabindex="-1">
+            <div class="ik-ticker">
+              <div class="ik-ticker-inner">
+                <span>❄ ice kingdom &nbsp;·&nbsp; bot creator &nbsp;·&nbsp; requests open &nbsp;·&nbsp; character writer &nbsp;·&nbsp; builder of worlds &nbsp;·&nbsp; the ice never melts &nbsp;·&nbsp;</span>
+                <span>❄ ice kingdom &nbsp;·&nbsp; bot creator &nbsp;·&nbsp; requests open &nbsp;·&nbsp; character writer &nbsp;·&nbsp; builder of worlds &nbsp;·&nbsp; the ice never melts &nbsp;·&nbsp;</span>
+              </div>
+            </div>
+            <div class="ik-text">Welcome. I'm a small bot creator — happy to bring your ideas to life. Hit the button below to send a request through.</div>
+            <div class="ik-quote">The ice kingdom doesn't just build characters. It builds worlds that breathe.</div>
+            <div class="ik-crystal-div">❄ ✦ ❄</div>
+            <div class="ik-text ik-text-warn">
+              These themes will never appear in my bots:<br><br>
+              ✖ Vore &nbsp;·&nbsp; ✖ Minors &nbsp;·&nbsp; ✖ NTR &nbsp;·&nbsp; ✖ Scat / Piss / Fart
+            </div>
+            <a class="ik-btn" href="https://discord.gg/XfWYeHdnsV" target="_blank">❄ Discord</a>
+            <a class="ik-btn" href="https://docs.google.com/forms/d/e/1FAIpQLScpRXwluJDxmzaTONo2854Elyajf_4qnks68V5M77giZSxrdQ/viewform?usp=publish-editor" target="_blank">❄ Bot Request</a>
+          </div>
+        </div>
+
+        <!-- P2: The Throne -->
+        <div class="ik-panel" id="ik-p2">
+          <div class="ik-panel-header">
+            <p class="ik-panel-title" data-text="The Throne">The Throne</p>
+            <p class="ik-panel-sub">milestones of the kingdom</p>
+          </div>
+          <div class="ik-scroll" tabindex="-1">
+            <div class="ik-goal ik-goal-done">
+              <span class="ik-goal-icon">✦</span>
+              <div class="ik-goal-text">
+                <span class="ik-goal-label">25 Followers</span>
+                <span class="ik-goal-reward">The throne is claimed. Goal reached.</span>
+              </div>
+            </div>
+            <div class="ik-goal ik-goal-locked">
+              <span class="ik-goal-icon">🔒</span>
+              <div class="ik-goal-text">
+                <span class="ik-goal-label">50 Followers</span>
+                <span class="ik-goal-reward">Reward: NSFW photos unlocked on bots ❤</span>
+              </div>
+            </div>
+            <div class="ik-goal ik-goal-locked">
+              <span class="ik-goal-icon">🔒</span>
+              <div class="ik-goal-text">
+                <span class="ik-goal-label">100 Followers</span>
+                <span class="ik-goal-reward">Reward: TBA ✦</span>
+              </div>
+            </div>
+            <div class="ik-goal ik-goal-locked">
+              <span class="ik-goal-icon">🔒</span>
+              <div class="ik-goal-text">
+                <span class="ik-goal-label">200 Followers</span>
+                <span class="ik-goal-reward">Reward: TBA — the kingdom expands ❄</span>
+              </div>
+            </div>
+            <div class="ik-progress-wrap" style="margin-top:10px;">
+              <div class="ik-progress-label">
+                <span>Progress to 50</span>
+                <span>35 / 50</span>
+              </div>
+              <div class="ik-progress-bar">
+                <div class="ik-progress-fill" style="width:70%;"></div>
+              </div>
+            </div>
+            <div class="ik-text" style="margin-top:10px; font-style:italic; font-size:0.71rem;">
+              Thank you to every soul who found their way here. The ice kingdom grows because of you. ❄
+            </div>
+          </div>
+        </div>
+
+        <!-- P3: The Court -->
+        <div class="ik-panel" id="ik-p3">
+          <div class="ik-panel-header">
+            <p class="ik-panel-title" data-text="The Court">The Court</p>
+            <p class="ik-panel-sub">creators worth your time</p>
+          </div>
+          <div class="ik-scroll" tabindex="-1">
+            <a class="ik-creator" href="https://janitorai.com/profiles/f40a01e1-d01c-4df3-927d-f42c94be3ab7_profile-of-giteix" target="_blank">
+              <img src="https://ella.janitorai.com/avatars/HdtGxXAbzXq4RFAHLYIaM.webp?width=600" alt="Giteix">
+              <div class="ik-creator-info">
+                <span class="ik-creator-name">Giteix</span>
+                <span class="ik-creator-note">Right-hand man</span>
+                <span class="ik-creator-tag ik-tag-royal">Royal Guard</span>
+              </div>
+            </a>
+            <a class="ik-creator" href="https://janitorai.com/profiles/3992782c-a0e3-493e-96cd-2ebebdbbdfe3_profile-of-mimi-mio" target="_blank">
+              <img src="https://ella.janitorai.com/avatars/G2eOIWfInLuKy6TStI4V3.webp?width=600" alt="MimiMio">
+              <div class="ik-creator-info">
+                <span class="ik-creator-name">MimiMio</span>
+                <span class="ik-creator-note">A pillar of the court</span>
+                <span class="ik-creator-tag ik-tag-knight">Knight</span>
+              </div>
+            </a>
+            <a class="ik-creator" href="https://janitorai.com/profiles/fd8065ed-d150-425a-a9a1-beebe22b3912_profile-of-Rika" target="_blank">
+              <img src="https://ella.janitorai.com/avatars/NBBAb_XbYhjgBg3Pv7XZc.webp?width=600" alt="Rika_katsuke">
+              <div class="ik-creator-info">
+                <span class="ik-creator-name">Rika_katsuke</span>
+                <span class="ik-creator-note">A pillar of the court</span>
+                <span class="ik-creator-tag ik-tag-knight">Knight</span>
+              </div>
+            </a>
+            <a class="ik-creator" href="https://janitorai.com/profiles/b62a3ffc-dd59-4752-ae36-8274e84c40e0_profile-of-sorrowful-crybaby" target="_blank">
+              <img src="https://ella.janitorai.com/avatars/8aCiL3wwhMKhFqm9KAvIV.webp?width=600" alt="Sorrowful_Crybaby">
+              <div class="ik-creator-info">
+                <span class="ik-creator-name">Sorrowful_Crybaby</span>
+                <span class="ik-creator-note">Underrated — deserves a throne of their own</span>
+                <span class="ik-creator-tag ik-tag-knight">Knight</span>
+              </div>
+            </a>
+            <a class="ik-creator" href="https://janitorai.com/profiles/5793fc0b-a2e9-4e5b-b0b9-129eba089e34_profile-of-vicdrip" target="_blank">
+              <img src="https://ella.janitorai.com/avatars/7oa3hOEMrfaTFP-kjgHcl.webp?width=600" alt="Vicdrip">
+              <div class="ik-creator-info">
+                <span class="ik-creator-name">Vicdrip</span>
+                <span class="ik-creator-note">A pillar of the court</span>
+                <span class="ik-creator-tag ik-tag-knight">Knight</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- P4: The Lore -->
+        <div class="ik-panel" id="ik-p4">
+          <div class="ik-panel-header">
+            <p class="ik-panel-title" data-text="The Lore">The Lore</p>
+            <p class="ik-panel-sub">of the one who rules</p>
+          </div>
+          <div class="ik-scroll" tabindex="-1">
+            <div class="ik-lore-line"><span class="ik-lore-key">Origin</span><span>Born from frost and fiction — somewhere between a dream and a dead star.</span></div>
+            <div class="ik-lore-line"><span class="ik-lore-key">Craft</span><span>Bot creator. Character writer. Builder of worlds that shouldn't exist.</span></div>
+            <div class="ik-lore-line"><span class="ik-lore-key">Creed</span><span>Every character deserves depth. Every story deserves teeth.</span></div>
+            <div class="ik-lore-line"><span class="ik-lore-key">Weakness</span><span>Good dialogue. A well-written villain. Characters that hurt to love.</span></div>
+            <div class="ik-lore-line"><span class="ik-lore-key">Domain</span><span>The ice kingdom — where stories freeze mid-breath and last forever.</span></div>
+            <div class="ik-lore-line"><span class="ik-lore-key">Status</span><span>The kingdom is open. The throne is warm. The ice never melts.</span></div>
+            <div class="ik-quote" style="margin-top:12px;">The cold doesn't kill here. It preserves.</div>
+            <div class="ik-text" style="margin-top:10px; font-style:italic; font-size:0.71rem; border-color:rgba(160,220,255,0.06);">❄ Please, be my guest.</div>
+          </div>
+        </div>
+
+        <!-- P5: TBA -->
+        <div class="ik-panel" id="ik-p5">
+          <div class="ik-panel-header">
+            <p class="ik-panel-title" data-text="TBA">TBA</p>
+            <p class="ik-panel-sub">something is coming</p>
+          </div>
+          <div class="ik-scroll" tabindex="-1">
+            <div class="ik-update">
+              <div class="ik-update-top"><span class="ik-update-tag ik-tag-new">New</span><span class="ik-update-date">— edit date —</span></div>
+              <p class="ik-update-text">New bot dropped</p>
+            </div>
+            <div class="ik-update">
+              <div class="ik-update-top"><span class="ik-update-tag ik-tag-wip">WIP</span><span class="ik-update-date">— edit date —</span></div>
+              <p class="ik-update-text">Working on something — edit this with what you're currently cooking.</p>
+            </div>
+            <div class="ik-update">
+              <div class="ik-update-top"><span class="ik-update-tag ik-tag-done">Done</span><span class="ik-update-date">— edit date —</span></div>
+              <p class="ik-update-text">Finished and archived.</p>
+            </div>
+            <div class="ik-update">
+              <div class="ik-update-top"><span class="ik-update-tag ik-tag-wip">WIP</span><span class="ik-update-date">— edit date —</span></div>
+              <p class="ik-update-text">Another slot — add as many update cards as you need.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- P6: FAQ -->
+        <div class="ik-panel" id="ik-p6">
+          <div class="ik-panel-header">
+            <p class="ik-panel-title" data-text="FAQ">FAQ</p>
+            <p class="ik-panel-sub">questions from the subjects</p>
+          </div>
+          <div class="ik-scroll" tabindex="-1">
+            <div class="ik-faq">
+              <div class="ik-faq-q">Are requests free?</div>
+              <div class="ik-faq-a">Yes, all bot requests are completely free. Fill out the form in The Kingdom.</div>
+            </div>
+            <div class="ik-faq">
+              <div class="ik-faq-q">How long do requests take?</div>
+              <div class="ik-faq-a">Depends on complexity. Simple bots can be done in a day, detailed ones may take longer.</div>
+            </div>
+            <div class="ik-faq">
+              <div class="ik-faq-q">Do you do NSFW bots?</div>
+              <div class="ik-faq-a">Yes, once the 50 follower milestone is reached. Check The Throne for progress.</div>
+            </div>
+            <div class="ik-faq">
+              <div class="ik-faq-q">Can I request a specific persona or writing style?</div>
+              <div class="ik-faq-a">Absolutely. The more detail you put in the request form, the better the result.</div>
+            </div>
+            <div class="ik-faq">
+              <div class="ik-faq-q">What themes won't you write?</div>
+              <div class="ik-faq-a">Vore, minors, NTR, scat/piss/fart. Everything else is open for discussion.</div>
+            </div>
+            <div class="ik-text" style="margin-top:8px; font-style:italic; font-size:0.7rem; border-color:rgba(160,220,255,0.06);">❄ More questions? Hit the Discord.</div>
+          </div>
+        </div>
+
+      </div><!-- /ik-content -->
+
+      <!-- AVATAR -->
+      <div class="pp-uc-avatar-container">
+        <img class="pp-uc-avatar" src="https://ella.janitorai.com/avatars/HdtGxXAbzXq4RFAHLYIaM.webp?width=600" alt="Avatar">
+      </div>
+
+      <!-- HEADER INFO -->
+      <div class="card-header-info">
+        <div class="profile-info-box">
+          welcome to <span class="profile-title">chnexio</span> ❄
+        </div>
+        <div class="profile-followers">35 subjects</div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="card-actions">
+        <button class="ik-action-btn">Follow</button>
+        <button class="ik-action-btn">Message</button>
+        <button class="ik-action-btn">···</button>
+      </div>
+
+    </div><!-- /card-grid -->
+
+    <div class="credits">
+      <a href="https://janitorai.com/profiles/5d6df38d-636b-40e3-9825-3f3b9edb9eab_profile-of-zyxy">profile css by @zyxy | inspired by zyxy css</a>
+    </div>
+  </div><!-- /pp-uc-background -->
+
+  <script>
+    /* ── TAB SWITCHING ── */
+    const tabs   = document.querySelectorAll('.ik-tab');
+    const panels = document.querySelectorAll('.ik-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.panel;
+        tabs.forEach(t => t.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(target).classList.add('active');
+      });
+    });
+
+    /* ── SNOW ── */
+    (function(){
+      var s = document.getElementById('ikSnow');
+      if (!s) return;
+      var sc = s.getContext('2d'), SW, SH, flakes = [];
+      function sr(){ SW = s.width = window.innerWidth; SH = s.height = window.innerHeight; }
+      sr(); window.addEventListener('resize', sr);
+      for (var i = 0; i < 75; i++)
+        flakes.push({ x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight, r: Math.random()*2.3+0.3, sp: Math.random()*0.7+0.1, sw: Math.random()*0.5-0.25, o: Math.random()*0.5+0.15 });
+      function sd(){
+        sc.clearRect(0,0,SW,SH); sc.fillStyle = '#b8d8f8';
+        flakes.forEach(function(f){
+          sc.globalAlpha = f.o; sc.beginPath(); sc.arc(f.x,f.y,f.r,0,Math.PI*2); sc.fill();
+          f.y += f.sp; f.x += f.sw;
+          if (f.y > SH){ f.y = -4; f.x = Math.random()*SW; }
+          if (f.x > SW) f.x = 0;
+          if (f.x < 0)  f.x = SW;
+        });
+        sc.globalAlpha = 1; requestAnimationFrame(sd);
+      }
+      sd();
+    })();
+
+    /* ── CURSOR TRAIL ── */
+    (function(){
+      var t = document.getElementById('ikTrail');
+      if (!t) return;
+      var tc = t.getContext('2d'), TW, TH, pts = [];
+      function tr(){ TW = t.width = window.innerWidth; TH = t.height = window.innerHeight; }
+      tr(); window.addEventListener('resize', tr);
+      window.addEventListener('mousemove', function(e){
+        pts.push({ x: e.clientX, y: e.clientY, a: 1, r: Math.random()*2+1 });
+        if (pts.length > 40) pts.shift();
+      });
+      function td(){
+        tc.clearRect(0,0,TW,TH);
+        pts.forEach(function(p,i){
+          p.a -= 0.025; if (p.a < 0) p.a = 0;
+          tc.globalAlpha = p.a * 0.6;
+          tc.fillStyle = '#a0d4f0';
+          tc.beginPath(); tc.arc(p.x, p.y, p.r*(i/pts.length), 0, Math.PI*2); tc.fill();
+        });
+        tc.globalAlpha = 1; requestAnimationFrame(td);
+      }
+      td();
+    })();
+  </script>
+</body>
+</html>
